@@ -3,22 +3,22 @@
 function _h( f, c ) {
 	return function() {
 		var res;
-	    if( !c.apply( this, arguments ) ) {
+		if( !c.apply( this, arguments ) ) {
 			res = f.apply( this, arguments );
-	    } else {
-	    	console.log( f.name + ' cached' );
-	    	//var trace = printStackTrace();
- 			//alert(trace.join('\n\n')); 
-	    }
-	    return res;
+		} else {
+			console.log( f.name + ' cached' );
+		//var trace = printStackTrace();
+		//alert(trace.join('\n\n')); 
+		}
+		return res;
 	}
 }
 
 function _h2( f, c ) {
 	return function() {
 		var res = f.apply( this, arguments );
-	    c.apply( res || this, arguments );
-	    return res;
+		c.apply( res || this, arguments );
+		return res;
 	}
 }
 
@@ -105,6 +105,66 @@ WebGLRenderingContext.prototype.viewport = _h( WebGLRenderingContext.prototype.v
 	cache.viewportY = y;
 	cache.viewportW = w;
 	cache.viewportH = h;
+
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.scissor = _h( WebGLRenderingContext.prototype.scissor, function( x, y, w, h ) {
+
+	var cached = ( cache.scissorX === x ) && ( cache.scissorY === y ) && ( cache.scissorW === w ) && ( cache.scissorH === h );
+	
+	cache.scissorX = x;
+	cache.scissorY = y;
+	cache.scissorW = w;
+	cache.scissorH = h;
+
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.depthRange = _h( WebGLRenderingContext.prototype.depthRange, function( near, far ) {
+
+	var cached = cache.depthRangeNear === near && cache.far === depthRangeFar;
+	cache.depthRangeNear = near;
+	cache.depthRangeFar = far;
+
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.cullFace = _h( WebGLRenderingContext.prototype.cullFace, function( mode ) {
+
+	var cached = cache.cullFaceMode === mode;
+	cache.cullFaceMode = mode;
+
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.frontFace = _h( WebGLRenderingContext.prototype.frontFace, function( mode ) {
+
+	var cached = cache.frontFaceMode === mode;
+	cache.frontFaceMode = mode;
+
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.lineWidth = _h( WebGLRenderingContext.prototype.lineWidth, function( width ) {
+
+	var cached = cache.lineWidthWidth === width;
+	cache.lineWidthWidth = width;
+
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.polygonOffset = _h( WebGLRenderingContext.prototype.polygonOffset, function( factor, units ) {
+
+	var cached = cache.polygonOffsetFactor === factor && cache.polygonOffsetUnits === units;
+	cache.polygonOffsetFactor = factor;
+	cache.polygonOffsetUnits = units;
 
 	return cached;
 
