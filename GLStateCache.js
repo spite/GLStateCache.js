@@ -22,7 +22,10 @@ function _h2( f, c ) {
 	}
 }
 
-var cache = {};
+var cache = {
+	uniform1f: {},
+	pixelStorei: {}
+};
 
 WebGLRenderingContext.prototype.useProgram = _h( WebGLRenderingContext.prototype.useProgram, function( program ) {
 
@@ -34,9 +37,19 @@ WebGLRenderingContext.prototype.useProgram = _h( WebGLRenderingContext.prototype
 
 WebGLRenderingContext.prototype.bindBuffer = _h( WebGLRenderingContext.prototype.bindBuffer, function( target, buffer ) {
 
-	var cached = ( cache.bindBufferTarget === target ) && ( cache.bindBufferBuffer === buffer );
-	cache.bindBufferTarget = target;
-	cache.bindBufferBuffer = buffer;
+	var cached;
+
+	switch (target) {
+		case this.ARRAY_BUFFER:
+			cached = ( cache.bindBufferTargetArray ===  buffer );
+			cache.bindBufferTargetArray = buffer;
+			break;
+		case this.ELEMENT_ARRAY_BUFFER:
+			cached = ( cache.bindBufferTargetElementArray ===  buffer );
+			cache.bindBufferTargetElementArray = buffer;
+			break;
+	}
+	
 	return cached;
 	
 } );
@@ -52,9 +65,18 @@ WebGLRenderingContext.prototype.bindRenderbuffer = _h( WebGLRenderingContext.pro
 
 WebGLRenderingContext.prototype.bindTexture = _h( WebGLRenderingContext.prototype.bindTexture, function( target, texture ) {
 
-	var cached = ( cache.bindTextureTarget === target ) && ( cache.bindTextureTexture === texture );
-	cache.bindTextureTarget = target;
-	cache.bindTextureTexture = texture;
+	var cached;
+
+	switch (target) {
+		case this.TEXTURE_2D:
+			cached = ( cache.bindTexture2D === texture );
+			cache.bindTexture2D = texture;
+			break;
+		case this.TEXTURE_CUBE_MAP:
+			cached = ( cache.bindTextureCubeMap === texture );
+			cache.bindTextureCubeMap = texture;
+	}
+
 	return cached;
 	
 } );
@@ -92,6 +114,34 @@ WebGLRenderingContext.prototype.disableVertexAttribArray = _h( WebGLRenderingCon
 
 	var cached = ( cache.disableVertexAttribArrayIndex === index );
 	cache.disableVertexAttribArray = index;
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.enableVertexAttribArray = _h( WebGLRenderingContext.prototype.enableVertexAttribArray, function( index ) {
+
+	var cached = ( cache.enableVertexAttribArrayIndex === index );
+	cache.enableVertexAttribArray = index;
+	return cached;
+
+} );
+
+
+/*WebGLRenderingContext.prototype.uniform1f = _h( WebGLRenderingContext.prototype.uniform1f, function( location, value ) {
+
+	var cached = ( cache.uniform1f[ location ] === value );
+	cache.uniform1f[ location ] = value;
+	if( cached ) { console.log( location + ' is ' + value ); }
+	return cached;
+
+} );*/
+
+WebGLRenderingContext.prototype.pixelStorei = _h( WebGLRenderingContext.prototype.pixelStorei, function( pname, param ) {
+
+	var cached = ( cache.pixelStorei[ pname ] === param );
+	cache.pixelStorei[ pname ] = param;
+	//if( cached ) { console.log( pname + ' is ' + param ); }
+	//else { console.log( 'setting ' + pname + ' to ' +param )}
 	return cached;
 
 } );
