@@ -1,5 +1,14 @@
 (function(){
 
+var guid = (function() {
+	function s4() {
+		return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+	}
+	return function() {
+		return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+	};
+})();
+
 function _h( f, c ) {
 	return function() {
 		var res;
@@ -7,8 +16,8 @@ function _h( f, c ) {
 			res = f.apply( this, arguments );
 		} else {
 			console.log( f.name + ' cached' );
-		//var trace = printStackTrace();
-		//alert(trace.join('\n\n')); 
+			//var trace = printStackTrace();
+			//alert(trace.join('\n\n')); 
 		}
 		return res;
 	}
@@ -24,8 +33,29 @@ function _h2( f, c ) {
 
 var cache = {
 	uniform1f: {},
-	pixelStorei: {}
+	pixelStorei: {},
+	bufferDataArraySizeOrData: {},
+	bufferDataArrayUsage: {},
+	bufferDataElementArraySizeOrData: {},
+	bufferDataElementArrayUsage: {},
+	enable: {}
 };
+
+WebGLRenderingContext.prototype.enable = _h( WebGLRenderingContext.prototype.enable, function( cap ) {
+
+	var cached = ( cache.enable[ cap ] === true );
+	cache.enable[ cap ] = true;
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.disable = _h( WebGLRenderingContext.prototype.disable, function( cap ) {
+
+	var cached = ( cache.enable[ cap ] === false );
+	cache.enable[ cap ] = false;
+	return cached;
+
+} );
 
 WebGLRenderingContext.prototype.useProgram = _h( WebGLRenderingContext.prototype.useProgram, function( program ) {
 
@@ -54,6 +84,32 @@ WebGLRenderingContext.prototype.bindBuffer = _h( WebGLRenderingContext.prototype
 	
 } );
 
+/*
+
+Commented because data content can change, but the object itself doesn't
+
+WebGLRenderingContext.prototype.bufferData = _h( WebGLRenderingContext.prototype.bufferData, function( target, sizeOrData, usage ) {
+
+	var cached = false;
+
+	switch (target) {
+		case this.ARRAY_BUFFER:
+			cached = ( cache.bufferDataArraySizeOrData[ target ] === sizeOrData && cache.bufferDataArrayUsage[ target ] === usage );
+			cache.bufferDataArraySizeOrData[ target ] = sizeOrData;
+			cache.bufferDataArrayUsage[ target ] = usage;
+			break;
+		case this.ELEMENT_ARRAY_BUFFER:
+			cached = ( cache.bufferDataElementArraySizeOrData[ target ] === sizeOrData && cache.bufferDataElementArrayUsage[ target ] === usage );
+			cache.bufferDataElementArraySizeOrData[ target ] = sizeOrData;
+			cache.bufferDataElementArrayUsage[ target ] = usage;
+			break;
+	}
+	
+	return cached;
+	
+} );
+*/
+
 WebGLRenderingContext.prototype.bindRenderbuffer = _h( WebGLRenderingContext.prototype.bindRenderbuffer, function( target, buffer ) {
 
 	var cached = ( cache.bindRenderbufferTarget === target ) && ( cache.bindRenderbufferBuffer === buffer );
@@ -62,6 +118,22 @@ WebGLRenderingContext.prototype.bindRenderbuffer = _h( WebGLRenderingContext.pro
 	return cached;
 	
 } );
+
+WebGLRenderingContext.prototype.bindFramebuffer = _h( WebGLRenderingContext.prototype.bindFramebuffer, function( target, framebuffer ) {
+
+	var cached = ( cache.bindFramebufferTarget === target ) && ( cache.bindFramebufferFramebuffer === framebuffer );
+	cache.bindFramebufferTarget = target;
+	cache.bindFramebufferFramebuffer = framebuffer;
+	return cached;
+	
+} );
+
+/*WebGLRenderingContext.prototype.createFramebuffer = _h2( WebGLRenderingContext.prototype.createFramebuffer, function() {
+
+	this.id = guid();
+	console.log( 'create framebuffer' );
+	
+} );*/
 
 WebGLRenderingContext.prototype.bindTexture = _h( WebGLRenderingContext.prototype.bindTexture, function( target, texture ) {
 
@@ -186,15 +258,16 @@ WebGLRenderingContext.prototype.enableVertexAttribArray = _h( WebGLRenderingCont
 
 } );
 
-
-/*WebGLRenderingContext.prototype.uniform1f = _h( WebGLRenderingContext.prototype.uniform1f, function( location, value ) {
+/*
+WebGLRenderingContext.prototype.uniform1f = _h( WebGLRenderingContext.prototype.uniform1f, function( location, value ) {
 
 	var cached = ( cache.uniform1f[ location ] === value );
 	cache.uniform1f[ location ] = value;
 	if( cached ) { console.log( location + ' is ' + value ); }
 	return cached;
 
-} );*/
+} );
+*/
 
 WebGLRenderingContext.prototype.pixelStorei = _h( WebGLRenderingContext.prototype.pixelStorei, function( pname, param ) {
 
