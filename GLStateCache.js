@@ -197,7 +197,7 @@ WebGLRenderingContext.prototype.scissor = _h( WebGLRenderingContext.prototype.sc
 
 WebGLRenderingContext.prototype.depthRange = _h( WebGLRenderingContext.prototype.depthRange, function( near, far ) {
 
-	var cached = cache.depthRangeNear === near && cache.far === depthRangeFar;
+	var cached = cache.depthRangeNear === near && cache.depthRangeFar === far;
 	cache.depthRangeNear = near;
 	cache.depthRangeFar = far;
 
