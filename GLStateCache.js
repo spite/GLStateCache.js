@@ -17,7 +17,7 @@ function _h( f, c ) {
 		} else {
 			console.log( f.name + ' cached' );
 			//var trace = printStackTrace();
-			//alert(trace.join('\n\n')); 
+			//alert(trace.join('\n\n'));
 		}
 		return res;
 	}
@@ -79,9 +79,9 @@ WebGLRenderingContext.prototype.bindBuffer = _h( WebGLRenderingContext.prototype
 			cache.bindBufferTargetElementArray = buffer;
 			break;
 	}
-	
+
 	return cached;
-	
+
 } );
 
 /*
@@ -104,9 +104,9 @@ WebGLRenderingContext.prototype.bufferData = _h( WebGLRenderingContext.prototype
 			cache.bufferDataElementArrayUsage[ target ] = usage;
 			break;
 	}
-	
+
 	return cached;
-	
+
 } );
 */
 
@@ -116,7 +116,7 @@ WebGLRenderingContext.prototype.bindRenderbuffer = _h( WebGLRenderingContext.pro
 	cache.bindRenderbufferTarget = target;
 	cache.bindRenderbufferBuffer = buffer;
 	return cached;
-	
+
 } );
 
 WebGLRenderingContext.prototype.bindFramebuffer = _h( WebGLRenderingContext.prototype.bindFramebuffer, function( target, framebuffer ) {
@@ -125,14 +125,14 @@ WebGLRenderingContext.prototype.bindFramebuffer = _h( WebGLRenderingContext.prot
 	cache.bindFramebufferTarget = target;
 	cache.bindFramebufferFramebuffer = framebuffer;
 	return cached;
-	
+
 } );
 
 /*WebGLRenderingContext.prototype.createFramebuffer = _h2( WebGLRenderingContext.prototype.createFramebuffer, function() {
 
 	this.id = guid();
 	console.log( 'create framebuffer' );
-	
+
 } );*/
 
 WebGLRenderingContext.prototype.bindTexture = _h( WebGLRenderingContext.prototype.bindTexture, function( target, texture ) {
@@ -150,7 +150,7 @@ WebGLRenderingContext.prototype.bindTexture = _h( WebGLRenderingContext.prototyp
 	}
 
 	return cached;
-	
+
 } );
 
 WebGLRenderingContext.prototype.activeTexture = _h( WebGLRenderingContext.prototype.activeTexture, function( texture ) {
@@ -172,7 +172,7 @@ WebGLRenderingContext.prototype.blendEquation = _h( WebGLRenderingContext.protot
 WebGLRenderingContext.prototype.viewport = _h( WebGLRenderingContext.prototype.viewport, function( x, y, w, h ) {
 
 	var cached = ( cache.viewportX === x ) && ( cache.viewportY === y ) && ( cache.viewportW === w ) && ( cache.viewportH === h );
-	
+
 	cache.viewportX = x;
 	cache.viewportY = y;
 	cache.viewportW = w;
@@ -185,7 +185,7 @@ WebGLRenderingContext.prototype.viewport = _h( WebGLRenderingContext.prototype.v
 WebGLRenderingContext.prototype.scissor = _h( WebGLRenderingContext.prototype.scissor, function( x, y, w, h ) {
 
 	var cached = ( cache.scissorX === x ) && ( cache.scissorY === y ) && ( cache.scissorW === w ) && ( cache.scissorH === h );
-	
+
 	cache.scissorX = x;
 	cache.scissorY = y;
 	cache.scissorW = w;
