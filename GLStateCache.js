@@ -17,7 +17,7 @@ function _h( f, c ) {
 		} else {
 			console.log( f.name + ' cached' );
 			//var trace = printStackTrace();
-			//alert(trace.join('\n\n')); 
+			//alert(trace.join('\n\n'));
 		}
 		return res;
 	}
@@ -38,7 +38,12 @@ var cache = {
 	bufferDataArrayUsage: {},
 	bufferDataElementArraySizeOrData: {},
 	bufferDataElementArrayUsage: {},
-	enable: {}
+	enable: {},
+	blendColor: {},
+	blendEquationSeparate: {},
+	blendFuncSeparate: {},
+	colorMask: {}
+
 };
 
 WebGLRenderingContext.prototype.enable = _h( WebGLRenderingContext.prototype.enable, function( cap ) {
@@ -79,9 +84,9 @@ WebGLRenderingContext.prototype.bindBuffer = _h( WebGLRenderingContext.prototype
 			cache.bindBufferTargetElementArray = buffer;
 			break;
 	}
-	
+
 	return cached;
-	
+
 } );
 
 /*
@@ -104,9 +109,9 @@ WebGLRenderingContext.prototype.bufferData = _h( WebGLRenderingContext.prototype
 			cache.bufferDataElementArrayUsage[ target ] = usage;
 			break;
 	}
-	
+
 	return cached;
-	
+
 } );
 */
 
@@ -116,7 +121,7 @@ WebGLRenderingContext.prototype.bindRenderbuffer = _h( WebGLRenderingContext.pro
 	cache.bindRenderbufferTarget = target;
 	cache.bindRenderbufferBuffer = buffer;
 	return cached;
-	
+
 } );
 
 WebGLRenderingContext.prototype.bindFramebuffer = _h( WebGLRenderingContext.prototype.bindFramebuffer, function( target, framebuffer ) {
@@ -125,14 +130,14 @@ WebGLRenderingContext.prototype.bindFramebuffer = _h( WebGLRenderingContext.prot
 	cache.bindFramebufferTarget = target;
 	cache.bindFramebufferFramebuffer = framebuffer;
 	return cached;
-	
+
 } );
 
 /*WebGLRenderingContext.prototype.createFramebuffer = _h2( WebGLRenderingContext.prototype.createFramebuffer, function() {
 
 	this.id = guid();
 	console.log( 'create framebuffer' );
-	
+
 } );*/
 
 WebGLRenderingContext.prototype.bindTexture = _h( WebGLRenderingContext.prototype.bindTexture, function( target, texture ) {
@@ -150,7 +155,7 @@ WebGLRenderingContext.prototype.bindTexture = _h( WebGLRenderingContext.prototyp
 	}
 
 	return cached;
-	
+
 } );
 
 WebGLRenderingContext.prototype.activeTexture = _h( WebGLRenderingContext.prototype.activeTexture, function( texture ) {
@@ -172,7 +177,7 @@ WebGLRenderingContext.prototype.blendEquation = _h( WebGLRenderingContext.protot
 WebGLRenderingContext.prototype.viewport = _h( WebGLRenderingContext.prototype.viewport, function( x, y, w, h ) {
 
 	var cached = ( cache.viewportX === x ) && ( cache.viewportY === y ) && ( cache.viewportW === w ) && ( cache.viewportH === h );
-	
+
 	cache.viewportX = x;
 	cache.viewportY = y;
 	cache.viewportW = w;
@@ -185,7 +190,7 @@ WebGLRenderingContext.prototype.viewport = _h( WebGLRenderingContext.prototype.v
 WebGLRenderingContext.prototype.scissor = _h( WebGLRenderingContext.prototype.scissor, function( x, y, w, h ) {
 
 	var cached = ( cache.scissorX === x ) && ( cache.scissorY === y ) && ( cache.scissorW === w ) && ( cache.scissorH === h );
-	
+
 	cache.scissorX = x;
 	cache.scissorY = y;
 	cache.scissorW = w;
@@ -197,7 +202,7 @@ WebGLRenderingContext.prototype.scissor = _h( WebGLRenderingContext.prototype.sc
 
 WebGLRenderingContext.prototype.depthRange = _h( WebGLRenderingContext.prototype.depthRange, function( near, far ) {
 
-	var cached = cache.depthRangeNear === near && cache.far === depthRangeFar;
+	var cached = cache.depthRangeNear === near && cache.depthRangeFar === far;
 	cache.depthRangeNear = near;
 	cache.depthRangeFar = far;
 
@@ -245,7 +250,7 @@ WebGLRenderingContext.prototype.polygonOffset = _h( WebGLRenderingContext.protot
 WebGLRenderingContext.prototype.disableVertexAttribArray = _h( WebGLRenderingContext.prototype.disableVertexAttribArray, function( index ) {
 
 	var cached = ( cache.disableVertexAttribArrayIndex === index );
-	cache.disableVertexAttribArray = index;
+	cache.disableVertexAttribArrayIndex = index;
 	return cached;
 
 } );
@@ -253,7 +258,7 @@ WebGLRenderingContext.prototype.disableVertexAttribArray = _h( WebGLRenderingCon
 WebGLRenderingContext.prototype.enableVertexAttribArray = _h( WebGLRenderingContext.prototype.enableVertexAttribArray, function( index ) {
 
 	var cached = ( cache.enableVertexAttribArrayIndex === index );
-	cache.enableVertexAttribArray = index;
+	cache.enableVertexAttribArrayIndex = index;
 	return cached;
 
 } );
@@ -275,6 +280,62 @@ WebGLRenderingContext.prototype.pixelStorei = _h( WebGLRenderingContext.prototyp
 	cache.pixelStorei[ pname ] = param;
 	//if( cached ) { console.log( pname + ' is ' + param ); }
 	//else { console.log( 'setting ' + pname + ' to ' +param )}
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.blendColor = _h( WebGLRenderingContext.prototype.blendColor, ( r, g, b, a ) => {
+
+	const cached = ( cache.blendColor.r === r && cache.blendColor.g === g && cache.blendColor.b === b && cache.blendColor.a === a );
+	Object.assign( cache.blendColor, {
+		r, g, b, a,
+	} );
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.blendEquationSeparate = _h( WebGLRenderingContext.prototype.blendEquationSeparate, ( modeRGB, modeAlpha ) => {
+
+	const cached = ( cache.blendEquationSeparate.modeRGB === modeRGB && cache.blendEquationSeparate.modeAlpha === modeAlpha );
+	Object.assign( cache.blendEquationSeparate, {
+		modeRGB, modeAlpha,
+	} );
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.blendFuncSeparate = _h( WebGLRenderingContext.prototype.blendFuncSeparate, ( srcRGB, dstRGB, srcAlpha, dstAlpha ) => {
+
+	const cached = ( cache.blendFuncSeparate.srcRGB === srcRGB && cache.blendFuncSeparate.dstRGB === dstRGB && cache.blendFuncSeparate.srcAlpha === srcAlpha && cache.blendFuncSeparate.dstAlpha === dstAlpha );
+	Object.assign( cache.blendFuncSeparate, {
+		srcRGB, dstRGB, srcAlpha, dstAlpha,
+	} );
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.colorMask = _h( WebGLRenderingContext.prototype.colorMask, ( r, g, b, a ) => {
+
+	const cached = ( cache.colorMask.r === r && cache.colorMask.g === g && cache.colorMask.b === b && cache.colorMask.a === a );
+	Object.assign( cache.colorMask, {
+		r, g, b, a,
+	} );
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.depthFunc = _h( WebGLRenderingContext.prototype.depthFunc, ( func ) => {
+
+	const cached = ( cache.depthFuncFunc === func );
+	cache.depthFuncFunc = func;
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.depthMask = _h( WebGLRenderingContext.prototype.depthMask, ( v ) => {
+
+	const cached = ( cache.depthMaskEnable === v );
+	cache.depthMaskEnable = v;
 	return cached;
 
 } );
