@@ -38,7 +38,12 @@ var cache = {
 	bufferDataArrayUsage: {},
 	bufferDataElementArraySizeOrData: {},
 	bufferDataElementArrayUsage: {},
-	enable: {}
+	enable: {},
+	blendColor: {},
+	blendEquationSeparate: {},
+	blendFuncSeparate: {},
+	colorMask: {}
+
 };
 
 WebGLRenderingContext.prototype.enable = _h( WebGLRenderingContext.prototype.enable, function( cap ) {
@@ -275,6 +280,62 @@ WebGLRenderingContext.prototype.pixelStorei = _h( WebGLRenderingContext.prototyp
 	cache.pixelStorei[ pname ] = param;
 	//if( cached ) { console.log( pname + ' is ' + param ); }
 	//else { console.log( 'setting ' + pname + ' to ' +param )}
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.blendColor = _h( WebGLRenderingContext.prototype.blendColor, ( r, g, b, a ) => {
+
+	const cached = ( cache.blendColor.r === r && cache.blendColor.g === g && cache.blendColor.b === b && cache.blendColor.a === a );
+	Object.assign( cache.blendColor, {
+		r, g, b, a,
+	} );
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.blendEquationSeparate = _h( WebGLRenderingContext.prototype.blendEquationSeparate, ( modeRGB, modeAlpha ) => {
+
+	const cached = ( cache.blendEquationSeparate.modeRGB === modeRGB && cache.blendEquationSeparate.modeAlpha === modeAlpha );
+	Object.assign( cache.blendEquationSeparate, {
+		modeRGB, modeAlpha,
+	} );
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.blendFuncSeparate = _h( WebGLRenderingContext.prototype.blendFuncSeparate, ( srcRGB, dstRGB, srcAlpha, dstAlpha ) => {
+
+	const cached = ( cache.blendFuncSeparate.srcRGB === srcRGB && cache.blendFuncSeparate.dstRGB === dstRGB && cache.blendFuncSeparate.srcAlpha === srcAlpha && cache.blendFuncSeparate.dstAlpha === dstAlpha );
+	Object.assign( cache.blendFuncSeparate, {
+		srcRGB, dstRGB, srcAlpha, dstAlpha,
+	} );
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.colorMask = _h( WebGLRenderingContext.prototype.colorMask, ( r, g, b, a ) => {
+
+	const cached = ( cache.colorMask.r === r && cache.colorMask.g === g && cache.colorMask.b === b && cache.colorMask.a === a );
+	Object.assign( cache.colorMask, {
+		r, g, b, a,
+	} );
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.depthFunc = _h( WebGLRenderingContext.prototype.depthFunc, ( func ) => {
+
+	const cached = ( cache.depthFuncFunc === func );
+	cache.depthFuncFunc = func;
+	return cached;
+
+} );
+
+WebGLRenderingContext.prototype.depthMask = _h( WebGLRenderingContext.prototype.depthMask, ( v ) => {
+
+	const cached = ( cache.depthMaskEnable === v );
+	cache.depthMaskEnable = v;
 	return cached;
 
 } );
