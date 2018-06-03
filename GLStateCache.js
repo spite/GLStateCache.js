@@ -245,7 +245,7 @@ WebGLRenderingContext.prototype.polygonOffset = _h( WebGLRenderingContext.protot
 WebGLRenderingContext.prototype.disableVertexAttribArray = _h( WebGLRenderingContext.prototype.disableVertexAttribArray, function( index ) {
 
 	var cached = ( cache.disableVertexAttribArrayIndex === index );
-	cache.disableVertexAttribArray = index;
+	cache.disableVertexAttribArrayIndex = index;
 	return cached;
 
 } );
@@ -253,7 +253,7 @@ WebGLRenderingContext.prototype.disableVertexAttribArray = _h( WebGLRenderingCon
 WebGLRenderingContext.prototype.enableVertexAttribArray = _h( WebGLRenderingContext.prototype.enableVertexAttribArray, function( index ) {
 
 	var cached = ( cache.enableVertexAttribArrayIndex === index );
-	cache.enableVertexAttribArray = index;
+	cache.enableVertexAttribArrayIndex = index;
 	return cached;
 
 } );
